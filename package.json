@@ -1,10 +1,16 @@
 {
-  "name": "node-ts-template",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "qh-cicd",
+  "version": "0.0.1",
+  "description": "A small CLI for lightweight project management flows (commit + push).",
+  "main": "build/index.js",
   "type": "module",
+  "bin": {
+    "to-self": "build/cli.js"
+  },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "pnpm run build",
+    "start": "node build/cli.js"
   },
   "files": [
     "build"
@@ -12,12 +18,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "dotenv": "^16.5.0"
+    "commander": "^14.0.1",
+    "inquirer": "^12.9.6",
+    "simple-git": "^3.28.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.1",
     "typescript": "^5.8.3"
-  }
+  },
+  "packageManager": "pnpm@10.17.1+sha512.17c560fca4867ae9473a3899ad84a88334914f379be46d455cbf92e5cf4b39d34985d452d2583baf19967fa76cb5c17bc9e245529d0b98745721aa7200ecaf7a"
 }
