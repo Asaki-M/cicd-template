@@ -2,6 +2,7 @@
 import { createRequire } from "node:module";
 import { Command } from "commander";
 import { toSelf } from "./core/toSelf.js";
+import { formatCliError } from "./utils/log.js";
 
 type PackageJson = { name?: string; version?: string; description?: string };
 
@@ -22,6 +23,6 @@ program
 
 program.parseAsync().catch((error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
-  process.stderr.write(`${program.name()}: ${message}\n`);
+  process.stderr.write(`${formatCliError(program.name(), message)}\n`);
   process.exitCode = 1;
 });

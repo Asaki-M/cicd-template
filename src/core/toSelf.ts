@@ -5,11 +5,11 @@ import { simpleGit, type SimpleGit } from "simple-git";
 import { COMMIT_TYPES, type CommitType } from "../utils/constant.js";
 import {
   allowedCommitTypesText,
-  formatStatusLine,
   getRemoteFromUpstream,
   hasConventionalPrefix,
   isRecognizedCommitType,
 } from "../utils/index.js";
+import { formatGitStatusLine, logHeading, logStep, logSuccess, logWarning } from "../utils/log.js";
 
 type ToSelfOptions = {
   commitMessage?: string;
@@ -78,10 +78,6 @@ async function remoteBranchExists(git: SimpleGit, remote: string, branch: string
   }
 }
 
-function logStep(message: string): void {
-  process.stdout.write(`\n==> ${message}\n`);
-}
-
 export async function toSelf(options: ToSelfOptions = {}): Promise<void> {
   const cwd = options.cwd ? resolvePath(options.cwd) : getCwd();
   const git = simpleGit({ baseDir: cwd });
@@ -104,9 +100,9 @@ export async function toSelf(options: ToSelfOptions = {}): Promise<void> {
 
   if (isDirty) {
     logStep("Found uncommitted changes");
-    process.stdout.write("Uncommitted changes:\n");
+    logHeading("Uncommitted changes:");
     for (const file of status.files) {
-      process.stdout.write(`  ${formatStatusLine(file)}\n`);
+      process.stdout.write(`  ${formatGitStatusLine(file)}\n`);
     }
     process.stdout.write("\n");
 
@@ -172,15 +168,13 @@ export async function toSelf(options: ToSelfOptions = {}): Promise<void> {
     } catch {
       const after = await git.status();
       if (after.conflicted && after.conflicted.length > 0) {
-        process.stderr.write(
-          `\nPull resulted in conflicts:\n${after.conflicted.map((p) => `  ${p}`).join("\n")}\n`,
-        );
+        process.stderr.write(`\nPull resulted in conflicts:\n${after.conflicted.map((p) => `  ${p}`).join("\n")}\n`);
         throw new Error("please resolve conflicts, then rerun to-self");
       }
       throw new Error("git pull failed; please fix and rerun");
     }
   } else {
-    process.stdout.write("Remote branch not found yet; skipping pull.\n");
+    logWarning("Remote branch not found yet; skipping pull.");
   }
 
   // Push current branch to a same-named branch on the selected remote.
@@ -188,5 +182,5 @@ export async function toSelf(options: ToSelfOptions = {}): Promise<void> {
   const pushOptions = hasUpstream ? [] : ["-u"];
   await git.push(remote, branch, pushOptions);
 
-  process.stdout.write(`Pushed ${branch} -> ${remote}/${branch}\n`);
+  logSuccess(`Pushed ${branch} -> ${remote}/${branch}`);
 }
