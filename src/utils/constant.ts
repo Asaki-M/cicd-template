@@ -1,17 +1,16 @@
 export const COMMIT_TYPES = [
-  { value: "feat", name: "feat: 新功能（feature）" },
-  { value: "fix", name: "fix: 修复bug（直接修复）" },
-  { value: "to", name: "to: 修复bug（只产生diff不自动修复）" },
-  { value: "docs", name: "docs: 文档（documentation）" },
-  { value: "style", name: "style: 格式（不影响代码运行的变动）" },
-  { value: "refactor", name: "refactor: 重构（非新增功能/非修改bug）" },
-  { value: "perf", name: "perf: 优化（性能/体验）" },
-  { value: "test", name: "test: 增加测试" },
-  { value: "chore", name: "chore: 构建过程或辅助工具变动" },
-  { value: "revert", name: "revert: 回滚到上一个版本" },
-  { value: "merge", name: "merge: 代码合并" },
-  { value: "sync", name: "sync: 同步主线或分支Bug" },
+  { value: "feat", name: "feat: New feature" },
+  { value: "fix", name: "fix: Bug fix" },
+  { value: "to", name: "to: Fix via diff only" },
+  { value: "docs", name: "docs: Documentation" },
+  { value: "style", name: "style: Formatting (no logic change)" },
+  { value: "refactor", name: "refactor: Refactor (no feature/bugfix)" },
+  { value: "perf", name: "perf: Performance improvement" },
+  { value: "test", name: "test: Add/update tests" },
+  { value: "chore", name: "chore: Tooling/maintenance" },
+  { value: "revert", name: "revert: Revert previous change" },
+  { value: "merge", name: "merge: Merge changes" },
+  { value: "sync", name: "sync: Sync branch changes" },
 ] as const;
 
 export type CommitType = (typeof COMMIT_TYPES)[number]["value"];
-

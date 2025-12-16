@@ -5,12 +5,13 @@
   "main": "build/index.js",
   "type": "module",
   "bin": {
-    "to-self": "build/cli.js"
+    "to-self": "build/cli/toSelf.js",
+    "totest": "build/cli/toTest.js"
   },
   "scripts": {
     "build": "tsc",
     "prepare": "pnpm run build",
-    "start": "node build/cli.js"
+    "start": "node build/cli/toSelf.js"
   },
   "files": [
     "build"

@@ -2,6 +2,8 @@
 
 一个很小的 CLI：自动 `git add -A` → （如有变更则提交）→ `git push` 到同名远程分支。
 
+另提供 `totest`：把当前分支合并到目标测试分支并推送。
+
 ## 安装
 
 ```bash
@@ -43,6 +45,18 @@ to-self --help
 
 ```bash
 to-self --cwd ./test/testcicd
+```
+
+## to-test
+
+- 在 `feat/xx` 等分支执行：先同步并推送当前分支到远程，然后切到目标分支（默认 `test`），合并 `origin/feat/xx`，再推送 `origin/test`
+- 在目标分支（默认 `test`）执行：行为类似 `to-self`，直接推送当前分支
+- 支持自定义目标分支：`to-test --branch test-env`
+
+```bash
+to-test
+to-test --branch test-env
+to-test --message "chore: sync"   # 非交互提交
 ```
 
 ## 本地测试（在其他目录运行）
