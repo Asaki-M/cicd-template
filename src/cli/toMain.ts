@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createRequire } from "node:module";
 import { Command } from "commander";
-import { toTest } from "../core/toTest.js";
+import { toMain } from "../core/toMain.js";
 import { formatCliError } from "../utils/log.js";
 
 type PackageJson = { name?: string; version?: string; description?: string };
@@ -11,15 +11,15 @@ const pkg = require("../../package.json") as PackageJson;
 
 const program = new Command();
 program
-  .name("to-test")
-  .description("Merge current branch into target test branch and push.")
+  .name("to-main")
+  .description("Push current branch and create an MR/PR into target branch.")
   .version(pkg.version ?? "0.0.0")
   .option("-C, --cwd <path>", "run as if started in <path>")
-  .option("-b, --branch <name>", "target test branch name (default: test)")
+  .option("-b, --branch <name>", "target branch name (default: main)")
   .option("-t, --type <type>", "commit type prefix (feat/fix/to/docs/style/refactor/perf/test/chore/revert/merge/sync)")
   .option("-m, --message <msg>", "commit message (skip interactive prompt)")
   .action(async (options: { cwd?: string; branch?: string; message?: string; type?: string }) => {
-    await toTest({
+    await toMain({
       cwd: options.cwd,
       branch: options.branch,
       commitMessage: options.message,

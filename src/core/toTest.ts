@@ -41,7 +41,7 @@ export async function toTest(options: ToTestOptions = {}): Promise<void> {
     logStep(`On '${targetBranch}'; pushing current branch`);
     await commitIfDirty(git, options);
     logStep(`Pulling latest from ${remote}/${targetBranch}`);
-    await pullIfPossible(git, remote, targetBranch, "totest");
+    await pullIfPossible(git, remote, targetBranch, "to-test");
     logStep(`Pushing to ${remote}/${targetBranch}`);
     await pushCurrentBranch(git, remote, targetBranch);
     logSuccess(`Pushed ${targetBranch} -> ${remote}/${targetBranch}`);
@@ -56,7 +56,7 @@ export async function toTest(options: ToTestOptions = {}): Promise<void> {
 
   logStep(`Syncing ${sourceBranch} before merge`);
   logStep(`Pulling latest from ${remote}/${sourceBranch}`);
-  await pullIfPossible(git, remote, sourceBranch, "totest");
+  await pullIfPossible(git, remote, sourceBranch, "to-test");
   logStep(`Pushing to ${remote}/${sourceBranch}`);
   await pushCurrentBranch(git, remote, sourceBranch);
 
@@ -74,10 +74,10 @@ export async function toTest(options: ToTestOptions = {}): Promise<void> {
     await ensureLocalBranchFromRemote(git, remote, targetBranch);
 
     logStep(`Pulling latest from ${remote}/${targetBranch}`);
-    await pullIfPossible(git, remote, targetBranch, "totest");
+    await pullIfPossible(git, remote, targetBranch, "to-test");
 
     logStep(`Merging ${remote}/${sourceBranch} -> ${targetBranch}`);
-    await mergeRemoteBranchIntoCurrent(git, remote, sourceBranch, "totest");
+    await mergeRemoteBranchIntoCurrent(git, remote, sourceBranch, "to-test");
 
     logStep(`Pushing to ${remote}/${targetBranch}`);
     await pushCurrentBranch(git, remote, targetBranch);

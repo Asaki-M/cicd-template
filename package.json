@@ -6,7 +6,8 @@
   "type": "module",
   "bin": {
     "to-self": "build/cli/toSelf.js",
-    "totest": "build/cli/toTest.js"
+    "to-test": "build/cli/toTest.js",
+    "to-main": "build/cli/toMain.js"
   },
   "scripts": {
     "build": "tsc",

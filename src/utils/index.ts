@@ -230,7 +230,7 @@ export async function commitIfDirty(
  * @param git `simple-git` 实例
  * @param remote remote 名称
  * @param branch 分支名
- * @param rerunCommandName 发生冲突时提示用户重跑的命令名（如 `to-self`/`totest`）
+ * @param rerunCommandName 发生冲突时提示用户重跑的命令名（如 `to-self`/`to-test`）
  * @throws pull 失败或产生冲突时抛错
  */
 export async function pullIfPossible(
