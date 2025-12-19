@@ -1,6 +1,7 @@
 import { COMMIT_TYPES, type CommitType } from "./constant.js";
 import inquirer from "inquirer";
 import { type SimpleGit } from "simple-git";
+import { loadCicdConfigScopes } from "./config.js";
 import { formatGitStatusLine, logHeading, logStep, logWarning } from "./log.js";
 
 /**
@@ -98,6 +99,49 @@ export async function promptCommitSubject(): Promise<string> {
 }
 
 /**
+ * 交互式输入/选择提交 scope（可为空）。
+ * - 若 `${basename(cwd)}.cicd.config` 提供 `scopes: string[]`，则以列表方式选择
+ * - 否则让用户自行输入（可留空）
+ * @param cwd git 仓库工作目录
+ * @returns scope（trim 后；允许返回空字符串）
+ */
+export async function promptCommitScope(cwd: string): Promise<string> {
+  const scopes = await loadCicdConfigScopes(cwd);
+  if (scopes && scopes.length > 0) {
+    const answers = await inquirer.prompt<{ scope: string }>([
+      {
+        type: "list",
+        name: "scope",
+        message: "Select commit scope (optional):",
+        choices: [
+          { name: "(none)", value: "" },
+          ...scopes.map((s) => ({ name: s, value: s })),
+          { name: "(custom)", value: "__custom__" },
+        ],
+      },
+    ]);
+
+    if (answers.scope !== "__custom__") return answers.scope;
+  }
+
+  const answers = await inquirer.prompt<{ scope: string }>([
+    {
+      type: "input",
+      name: "scope",
+      message: "Enter commit scope (optional):",
+      validate: (value: string) => {
+        const trimmed = value.trim();
+        if (!trimmed) return true;
+        if (/\s/.test(trimmed)) return "Scope should not contain spaces";
+        if (/[()]/.test(trimmed)) return "Scope should not include parentheses";
+        return true;
+      },
+    },
+  ]);
+  return answers.scope.trim();
+}
+
+/**
  * 获取当前分支的 upstream 引用（如 `origin/main`）。
  * @param git `simple-git` 实例
  * @returns upstream 字符串；没有 upstream 时返回 `null`
@@ -167,7 +211,7 @@ export async function remoteBranchExists(git: SimpleGit, remote: string, branch:
  */
 export async function commitIfDirty(
   git: SimpleGit,
-  options: { commitMessage?: string; commitType?: string },
+  options: { commitMessage?: string; commitType?: string; cwd?: string },
 ): Promise<void> {
   logStep("Scanning working tree status");
   const status = await git.status();
@@ -190,6 +234,8 @@ export async function commitIfDirty(
   logStep("Preparing commit message");
   let message = options.commitMessage?.trim();
   let type: CommitType | undefined;
+  let scope = "";
+  const shouldPromptScope = process.stdin.isTTY && !options.commitMessage;
 
   if (options.commitType) {
     const candidate = options.commitType.trim();
@@ -216,7 +262,16 @@ export async function commitIfDirty(
     if (!type && !hasConventionalPrefix(message)) type = await promptCommitType();
   }
 
-  const finalMessage = hasConventionalPrefix(message) || !type ? message : `${type}: ${message.trim()}`;
+  if (shouldPromptScope && type && message && !hasConventionalPrefix(message)) {
+    scope = await promptCommitScope(options.cwd ?? process.cwd());
+  }
+
+  const finalMessage =
+    hasConventionalPrefix(message) || !type
+      ? message
+      : scope
+        ? `${type}(${scope}): ${message.trim()}`
+        : `${type}: ${message.trim()}`;
   logStep(`Committing: ${finalMessage}`);
   await git.commit(finalMessage);
 }

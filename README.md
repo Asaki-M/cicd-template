@@ -27,25 +27,18 @@ to-self
 
 如果当前工作区有未提交变更，会先列出变更文件，然后用交互式提示让你输入 commit message；如果工作区是干净的，会跳过提交直接 push。
 
-交互模式会先让你选择类型前缀（`feat/fix/to/...`），最终提交信息形如 `feat: xxx`。
+交互模式会先让你选择类型前缀（`feat/fix/to/...`），然后可选填写/选择 scope，最终提交信息形如 `feat(scope): xxx`（scope 为空则为 `feat: xxx`）。
 
-也可以直接传 commit message（适合脚本/CI）；如果你的 message 没带前缀，也可以额外传 `--type`：
+如果你希望 scope 用下拉列表选择，可以在目标仓库根目录放一个 `${repoName}.cicd.config`（`repoName` 为目录名）：
 
-```bash
-to-self --message "chore: update"
-to-self --type feat --message "add something"
+```json
+{ "scopes": ["core", "api", "deps"] }
 ```
 
 查看帮助：
 
 ```bash
 to-self --help
-```
-
-指定工作目录（不需要 `cd`）：
-
-```bash
-to-self --cwd ./test/testcicd
 ```
 
 ## to-test
@@ -57,7 +50,6 @@ to-self --cwd ./test/testcicd
 ```bash
 to-test
 to-test --branch test-env
-to-test --message "chore: sync"   # 非交互提交
 ```
 
 ## to-main
@@ -69,7 +61,6 @@ to-test --message "chore: sync"   # 非交互提交
 ```bash
 to-main
 to-main --branch master
-to-main --message "feat: something"   # 非交互提交
 ```
 
 ## 本地测试（在其他目录运行）

@@ -1,5 +1,4 @@
 import { cwd as getCwd } from "node:process";
-import { resolve as resolvePath } from "node:path";
 import { simpleGit } from "simple-git";
 import {
   commitIfDirty,
@@ -15,11 +14,10 @@ type ToTestOptions = {
   branch?: string;
   commitMessage?: string;
   commitType?: string;
-  cwd?: string;
 };
 
 export async function toTest(options: ToTestOptions = {}): Promise<void> {
-  const cwd = options.cwd ? resolvePath(options.cwd) : getCwd();
+  const cwd = getCwd();
   const targetBranch = options.branch?.trim() ? options.branch.trim() : "test";
   const git = simpleGit({ baseDir: cwd });
 

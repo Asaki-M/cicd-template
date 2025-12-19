@@ -1,5 +1,4 @@
 import { cwd as getCwd } from "node:process";
-import { resolve as resolvePath } from "node:path";
 import { simpleGit } from "simple-git";
 import {
   commitIfDirty,
@@ -14,11 +13,10 @@ type ToMainOptions = {
   branch?: string;
   commitMessage?: string;
   commitType?: string;
-  cwd?: string;
 };
 
 export async function toMain(options: ToMainOptions = {}): Promise<void> {
-  const cwd = options.cwd ? resolvePath(options.cwd) : getCwd();
+  const cwd = getCwd();
   const targetBranch = options.branch?.trim() ? options.branch.trim() : "main";
   const git = simpleGit({ baseDir: cwd });
 

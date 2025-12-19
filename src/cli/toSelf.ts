@@ -14,11 +14,8 @@ program
   .name("to-self")
   .description(pkg.description ?? "Commit (if needed) and push current branch.")
   .version(pkg.version ?? "0.0.0")
-  .option("-C, --cwd <path>", "run as if started in <path>")
-  .option("-t, --type <type>", "commit type prefix (feat/fix/to/docs/style/refactor/perf/test/chore/revert/merge/sync)")
-  .option("-m, --message <msg>", "commit message (skip interactive prompt)")
-  .action(async (options: { cwd?: string; message?: string; type?: string }) => {
-    await toSelf({ cwd: options.cwd, commitMessage: options.message, commitType: options.type });
+  .action(async () => {
+    await toSelf();
   });
 
 program.parseAsync().catch((error: unknown) => {

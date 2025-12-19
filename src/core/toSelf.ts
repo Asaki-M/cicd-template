@@ -1,5 +1,4 @@
 import { cwd as getCwd } from "node:process";
-import { resolve as resolvePath } from "node:path";
 import { simpleGit } from "simple-git";
 import {
   commitIfDirty,
@@ -12,11 +11,10 @@ import { logStep, logSuccess } from "../utils/log.js";
 type ToSelfOptions = {
   commitMessage?: string;
   commitType?: string;
-  cwd?: string;
 };
 
 export async function toSelf(options: ToSelfOptions = {}): Promise<void> {
-  const cwd = options.cwd ? resolvePath(options.cwd) : getCwd();
+  const cwd = getCwd();
   const git = simpleGit({ baseDir: cwd });
 
   logStep(`Working directory: ${cwd}`);

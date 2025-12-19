@@ -14,16 +14,10 @@ program
   .name("to-main")
   .description("Push current branch and create an MR/PR into target branch.")
   .version(pkg.version ?? "0.0.0")
-  .option("-C, --cwd <path>", "run as if started in <path>")
   .option("-b, --branch <name>", "target branch name (default: main)")
-  .option("-t, --type <type>", "commit type prefix (feat/fix/to/docs/style/refactor/perf/test/chore/revert/merge/sync)")
-  .option("-m, --message <msg>", "commit message (skip interactive prompt)")
-  .action(async (options: { cwd?: string; branch?: string; message?: string; type?: string }) => {
+  .action(async (options: { branch?: string }) => {
     await toMain({
-      cwd: options.cwd,
       branch: options.branch,
-      commitMessage: options.message,
-      commitType: options.type,
     });
   });
 
