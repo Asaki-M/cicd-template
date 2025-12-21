@@ -4,6 +4,7 @@
 
 另提供 `to-test`：把当前分支合并到目标测试分支并推送。
 另提供 `to-main`：推送当前分支并打印一个用于手动创建 MR/PR 的链接（合并到 main）。
+另提供 `to-deploy`：一个 CD 部署命令示例（默认 dry-run；用于展示模板代码，不做真实部署）。
 
 ## 安装
 
@@ -61,6 +62,16 @@ to-test --branch test-env
 ```bash
 to-main
 to-main --branch master
+```
+
+## to-deploy（示例）
+
+- 仅示例：内部调用 `src/core/deploy/template.ts` 的模板流程；默认 dry-run 不会执行真实部署
+- 如需真正部署，请在 `src/core/deploy/toDeploy.ts` 里替换 hooks（或新增你自己的命令）
+
+```bash
+to-deploy
+to-deploy --env production --app my-service --revision 1.2.3
 ```
 
 ## 本地测试（在其他目录运行）

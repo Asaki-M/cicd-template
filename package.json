@@ -7,7 +7,8 @@
   "bin": {
     "to-self": "build/cli/toSelf.js",
     "to-test": "build/cli/toTest.js",
-    "to-main": "build/cli/toMain.js"
+    "to-main": "build/cli/toMain.js",
+    "to-deploy": "build/cli/toDeploy.js"
   },
   "scripts": {
     "build": "tsc",
