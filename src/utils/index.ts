@@ -92,7 +92,14 @@ export async function promptCommitSubject(): Promise<string> {
       type: "input",
       name: "subject",
       message: "Enter commit subject (without prefix):",
-      validate: (value: string) => (value.trim().length > 0 ? true : "Commit message cannot be empty"),
+      validate: (value: string) => {
+        const trimmed = value.trim();
+        if (trimmed.length === 0) return "Commit message cannot be empty";
+        if (hasConventionalPrefix(trimmed)) {
+          return "Please enter subject only (no prefix like 'feat:' or 'feat(scope):')";
+        }
+        return true;
+      },
     },
   ]);
   return answers.subject.trim();
@@ -100,7 +107,7 @@ export async function promptCommitSubject(): Promise<string> {
 
 /**
  * 交互式输入/选择提交 scope（可为空）。
- * - 若 `${basename(cwd)}.cicd.config` 提供 `scopes: string[]`，则以列表方式选择
+ * - 若 `cicd.config.js` 提供 `scopes: string[]`，则以列表方式选择
  * - 否则让用户自行输入（可留空）
  * @param cwd git 仓库工作目录
  * @returns scope（trim 后；允许返回空字符串）
@@ -113,15 +120,15 @@ export async function promptCommitScope(cwd: string): Promise<string> {
         type: "list",
         name: "scope",
         message: "Select commit scope (optional):",
+        default: "",
         choices: [
-          { name: "(none)", value: "" },
           ...scopes.map((s) => ({ name: s, value: s })),
-          { name: "(custom)", value: "__custom__" },
+          { name: "(none)", value: "" },
         ],
       },
     ]);
 
-    if (answers.scope !== "__custom__") return answers.scope;
+    return answers.scope;
   }
 
   const answers = await inquirer.prompt<{ scope: string }>([

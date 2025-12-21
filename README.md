@@ -29,10 +29,10 @@ to-self
 
 交互模式会先让你选择类型前缀（`feat/fix/to/...`），然后可选填写/选择 scope，最终提交信息形如 `feat(scope): xxx`（scope 为空则为 `feat: xxx`）。
 
-如果你希望 scope 用下拉列表选择，可以在目标仓库根目录放一个 `${repoName}.cicd.config`（`repoName` 为目录名）：
+如果你希望 scope 用下拉列表选择，可以在目标仓库根目录放一个 `cicd.config.js`（会自动追加一个 `(none)` 选项用于不填写 scope）：
 
-```json
-{ "scopes": ["core", "api", "deps"] }
+```js
+export default { scopes: ["core", "api", "deps"] };
 ```
 
 查看帮助：

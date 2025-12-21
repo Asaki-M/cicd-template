@@ -1,5 +1,5 @@
-import { basename, join } from "node:path";
-import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { logWarning } from "./log.js";
 
 export type CicdConfig = {
@@ -16,14 +16,20 @@ function normalizeScope(value: unknown): string | null {
 }
 
 function getDefaultCicdConfigPath(cwd: string): string {
-  return join(cwd, `${basename(cwd)}.cicd.config`);
+  return join(cwd, "cicd.config.js");
+}
+
+async function importCicdConfig(configPath: string): Promise<unknown> {
+  const url = pathToFileURL(configPath).href;
+  const mod = await import(url);
+  return (mod as { default?: unknown }).default ?? mod;
 }
 
 export async function loadCicdConfigScopes(cwd: string): Promise<string[] | null> {
   const configPath = getDefaultCicdConfigPath(cwd);
   try {
-    const raw = await readFile(configPath, "utf8");
-    const parsed = JSON.parse(raw) as CicdConfig;
+    const imported = await importCicdConfig(configPath);
+    const parsed = imported as CicdConfig;
     const scopes = Array.isArray(parsed.scopes) ? parsed.scopes : null;
     if (!scopes) return null;
 
@@ -41,4 +47,3 @@ export async function loadCicdConfigScopes(cwd: string): Promise<string[] | null
     return null;
   }
 }
-
