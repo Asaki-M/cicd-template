@@ -7,7 +7,7 @@ import {
   pushCurrentBranch,
 } from "../utils/index.js";
 import { logStep, logSuccess, logWarning } from "../utils/log.js";
-import { createMergeRequest, parseRemoteUrl } from "../utils/mr.js";
+import { buildCreateMrUrl, parseRemoteUrl } from "../utils/mr.js";
 
 type ToMainOptions = {
   branch?: string;
@@ -46,17 +46,19 @@ export async function toMain(options: ToMainOptions = {}): Promise<void> {
   await pushCurrentBranch(git, remote, currentBranch);
   logSuccess(`Pushed ${currentBranch} -> ${remote}/${currentBranch}`);
 
-  logStep(`Creating MR/PR: ${currentBranch} -> ${targetBranch}`);
+  logStep(`Generating MR/PR link: ${currentBranch} -> ${targetBranch}`);
   const remoteUrl = (await git.raw(["remote", "get-url", remote])).trim();
   const parsed = parseRemoteUrl(remoteUrl);
   if (!parsed) {
     logWarning(`Could not parse remote url: ${remoteUrl}`);
+    return;
   }
 
-  await createMergeRequest({
-    cwd,
-    parsedRemote: parsed,
-    sourceBranch: currentBranch,
-    targetBranch,
-  });
+  const mrUrl = buildCreateMrUrl(parsed, currentBranch, targetBranch);
+  if (!mrUrl) {
+    logWarning(`Unsupported git hosting provider for remote: ${remoteUrl}`);
+    return;
+  }
+
+  logSuccess(`Open to create MR/PR: ${mrUrl}`);
 }

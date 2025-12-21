@@ -12,7 +12,7 @@ const pkg = require("../../package.json") as PackageJson;
 const program = new Command();
 program
   .name("to-main")
-  .description("Push current branch and create an MR/PR into target branch.")
+  .description("Push current branch and print an MR/PR link into target branch.")
   .version(pkg.version ?? "0.0.0")
   .option("-b, --branch <name>", "target branch name (default: main)")
   .action(async (options: { branch?: string }) => {
