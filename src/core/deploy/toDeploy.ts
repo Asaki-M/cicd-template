@@ -2,7 +2,8 @@ import { cwd as getCwd } from "node:process";
 import { basename } from "node:path";
 import { simpleGit } from "simple-git";
 import { logStep, logSuccess, logWarning } from "../../utils/log.js";
-import { runCdDeployment, type DeployArtifact, type DeployContext, type DeployHooks, type DeployResult } from "./template.js";
+import type { DeployArtifact, DeployContext, DeployHooks, DeployResult } from "./template.js";
+import { runCdDeployment } from "./template.js";
 
 export type ToDeployOptions = {
   cwd?: string;
