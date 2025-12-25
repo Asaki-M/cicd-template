@@ -8,7 +8,8 @@
     "to-self": "build/cli/toSelf.js",
     "to-test": "build/cli/toTest.js",
     "to-main": "build/cli/toMain.js",
-    "to-deploy": "build/cli/toDeploy.js"
+    "to-deploy": "build/cli/toDeploy.js",
+    "to-init": "build/cli/toInit.js"
   },
   "scripts": {
     "build": "tsc",

@@ -5,6 +5,7 @@
 另提供 `to-test`：把当前分支合并到目标测试分支并推送。
 另提供 `to-main`：推送当前分支并打印一个用于手动创建 MR/PR 的链接（合并到 main）。
 另提供 `to-deploy`：一个 CD 部署命令示例（默认 dry-run；用于展示模板代码，不做真实部署）。
+另提供 `to-init`：交互式生成 GitHub Actions / GitLab CI 的部署配置文件（从模版生成 yml）。
 
 ## 安装
 
@@ -72,6 +73,15 @@ to-main --branch master
 ```bash
 to-deploy
 to-deploy --env production --app my-service --revision 1.2.3
+```
+
+## to-init
+
+交互式选择平台并生成对应的 yml 文件到目标项目根目录：
+
+```bash
+to-init
+to-init --cwd /path/to/your/project
 ```
 
 ## 本地测试（在其他目录运行）
