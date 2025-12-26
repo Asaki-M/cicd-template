@@ -1,3 +1,6 @@
+## 博客
+[DOC](DOC.md)
+
 # to-self
 
 一个很小的 CLI：自动 `git add -A` → （如有变更则提交）→ `git push` 到同名远程分支。
